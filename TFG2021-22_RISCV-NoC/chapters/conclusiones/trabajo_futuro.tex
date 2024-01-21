@@ -1,0 +1,53 @@
+\chapter{Trabajo futuro}
+\label{chap:trabajo_futuro}
+
+En esta sección se presenta el posible trabajo futuro para continuar con el desarrollo del proyecto. También se exponen soluciones a algunos de los problemas encontrados (capítulo \ref{chap:problemas}).
+
+Para cumplir la motivación principal de este proyecto, debería realizarse una implementación en FPGA del RTL generado y, una vez comprobado su funcionamiento, realizar pruebas de la reconfiguración dinámica.
+
+Sin embargo, al enforcarnos en el diseño RTL, se han dejado de lado algunos aspectos que pueden afectar al diseño implementado. Durante las siguientes secciones se explican tanto mejoras funcionales, como mejoras para lograr una implementación satisfactoria.
+
+\section{Mejoras en el diseño de la NoC}
+
+\subsection{Mejoras en el \textit{crossbar}}
+El \textit{crossbar} es el mayor contribuyente al número de LUTs consumidos por un \textit{router}. Además, las señales que pasan por el crossbar tardan demasiado en propagarse y causan violaciones de \textit{timing}, debido a la lógica del \textit{round-robin} y el multiplexor.
+
+Para implementar el \textit{round-robin} de manera diferente (tal vez más eficiente), en lugar de usar un contador que indique el puerto de mayor prioridad, podría usarse un registro de desplazamiento de tantos bits como puertos tiene el \textit{crossbar} en el que la posición del bit que esté a $1$ indica el puerto de mayor prioridad. Algunas FPGAs cuentan con dispositivos que pueden implementar registros de desplazamiento de manera muy eficiente (más que un contador), aunque consumiría más registros.
+
+Por otro lado, todos los crossbar almacenan siempre el mismo número en el contador, por lo que podría compartirse dicha lógica si es posible, aunque para ello tal vez no sea necesario modificar el diseño RTL (tan solo las opciones de síntesis).
+
+\subsection{Emisores de serie a paquetes}
+Los emisores creados para empaquetar y enviar un bus de bits usan un contador para saber qué parte del bus deben enviar. Sin embargo, ese contador siempre se incrementa en uno y el valor máximo es conocido en tiempo de compilación (el parámetro local \textit{N\_FLITS}). Por lo tanto, podría remplazarse dicho contador por un número finito de estados en la FSM.
+
+\subsection{Estado de la red}
+Aunque se han realizado pruebas exhaustivas, estas no han tenido en cuenta \textit{soft errors} (SUE) que puedan aparecer, y pueden hacer que la red quede en un estado inestable o de bloqueo. Podría solucionarse si se añadiese algún sistema para monitorizar problemas que surjan en la red, por ejemplo vigilando si una conexión lleva demasiado tiempo establecida o si un camino tarda demasiado en establecerse.
+
+\subsection{Mejoras en la conmutación de circuitos segmentada}
+
+Con la configuración actual, si se intenta establecer una conexión con un dispositivo que está desactivado (estableciendo la señal \textit{ack} a 0 a fin de evitar recibir paquetes), es imposible deshacer el camino y liberar los recursos consumidos durante la conmutación de caminos segmentada (PCS). El último encaminador, que se conecta directamente con este dispositivo, seguirá intentando realizar una conexión indefinidamente, bloqueando todos los recursos reservados para dicho camino. Esto puede hacer que, si hay un error al especificar la dirección destino, los caminos utilizados queden por siempre bloqueados. Por lo tanto, una mejora notable de la NoC sería implementar un sistema de vuelta atrás en el que se deshaga el camino si, al llegar al último encaminador del camino, este no logra conectarse.
+
+\section{Mejoras SweRV}
+
+\subsection{Conexión de la ALU a la NoC}
+\label{subsec:futuro_alu_noc}
+La Unidad Aritmético-Lógica ha sido el único submódulo de la unidad de ejecución (EXU) que no usa la NoC. Esto es debido, principalmente, a los problemas vistos en la sección \ref{sec:problemas_noc}. Para conseguir implementarla podría haber dos enfoques:
+
+\begin{enumerate}
+    \item No modificar la ALU y enviar la información realizando modificaciones externas. Por ejemplo, podría aumentarse la frecuencia de reloj, o utilizarse dos emisores (y dos receptores en el \textit{wrapper}) para enviar la información en paralelo. Esta opción es la más sencilla, pero podría no funcionar y consumiría muchos recursos. Además, permanecería el problema de discernir el momento en el que enviar la información.
+    \item Estudiar en profundidad la ALU y realizar modificaciones a esta si es necesario. Se comentará más de esta solución a continuación.
+\end{enumerate}
+
+Una vez estudiada la ALU, podría crearse un sistema de paquetes con tipos (usando los bits libres de la cabecera para codificar el tipo del paquete), en el que tan sólo se mande la información (y los resultados) necesarios en cada momento. Por ejemplo, si se necesita usar la ALU para la fase de ejecución de una instrucción aritmético-lógica, pueden enviarse los operandos en un paquete de poco más de 64 bits (4 flits), mientras que si se trata del cálculo de la predicción de salto, podría ser un paquete enviando únicamente el paquete con la información para ello. Sería necesario, por lo tanto, crear nuevos emisores y receptores en los que se pueda establecer en tiempo de ejecución el tamaño de los paquetes a enviar.
+
+\subsection{Soporte para paradas}
+Con la configuración actual, los paquetes deben tardar menos de un ciclo del sistema en enviarse por la NoC. Por lo tanto, si han de enviarse paquetes demasiado grandes, o alguno de ellos tarda demasiado en transmitirse por la red, los submódulos pueden recibir información incorrecta.
+
+Para solucionar este problema sería necesario hacer que todos los submódulos \textit{esperen} a recibir un paquete para comenzar a realizar el cálculo, siendo necesario en ocasiones modificar ligeramente su diseño para añadir señales de control.
+
+Esta mejora relajaría considerablemente las restricciones temporales del reloj de la NoC, pero podría disminuir el CPI del procesador.
+
+\subsection{Modificar herramientas de configuración y testing}
+
+Para incluir la NoC se ha modificado manualmente la configuración \textit{default} generada por la herramienta \textit{swerv\_config\_gen}. El uso de la NoC depende de una constante en tiempo de compilación que debe definirse manualmente, por lo que una mejora notable para los usuarios del proyecto sería modificar dicha herramienta incluyendo la opción de habilitar la NoC y modificar sus parámetros: tamaño de la NoC, posición de los elementos, e incluso qué elementos incluir.
+
+Además, sólo se ha comprobado el funcionamiento usando QuestaSim, a pesar de que el SweRV-EL2 original cuenta con scripts para otros simuladores. Para facilitar el uso de nuestro diseño a otros desarrolladores, podrían modificarse dichos scripts para que nuestro proyecto soportase otros conjuntos de herramientas, y no solo Xilinx Vivado y QuestaSim.

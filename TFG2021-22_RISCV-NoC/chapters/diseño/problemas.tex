@@ -1,0 +1,42 @@
+
+% \epigraph {Some problems are easy to find and hard to fix; some are hard to find and easy to fix; some go both ways.}  {— The Soul of a New Machine, Tracy Kidder}
+\setchapterpreamble[u]{%
+    \dictum[Tracy Kidder, \textit{The Soul of a New Machine}] {\textquote{Some problems are easy to find and hard to fix; some are hard to find and easy to fix; some go both ways.}}
+}
+\chapter{Problemas y obstáculos encontrados}
+\label{chap:problemas}
+
+En esta sección se presentan los distintos problemas y obstáculos encontrados durante la realización del proyecto. Tareas que han ocupado tiempo pero, al no dar resultados, no han sido mencionadas en otras partes de la memoria.
+
+% \tdinquiry[inline, caption={Cosas por hacer problemas y obstáculos}]{
+%     \begin{itemize}
+%         \item Hablar de la dificultad de depuración
+%         \item La verdad, la mayor dificultad ha sido que en realidad no soy de hardware (cacharreo en mi tiempo libre, pero estudio la rama de computación en Ing. Inf. y no he cursado nada más que TOC) y he tenido que aprender un montón para hacer este proyecto, ¿esto lo explico? $\rightarrow$ Mejor a conclusiones
+%     \end{itemize}
+% }
+
+\section{Diseño de una NoC asíncrona}
+
+Al comienzo del proyecto se decidió que la conmutación de circuitos de la NoC fuese asíncrona, pudiendo establecer un camino en un ciclo de reloj y, en el siguiente ciclo, comenzar el envío de flits de datos. Esto no debería causar ningún problema gracias a que el algoritmo de encaminamiento, \textit{Dimensional Order Routing}, está libre de \textit{deadlocks}.
+
+Además, la simulación \textit{conductual} se ejecutaba sin errores. Sin embargo, al hacer simulaciones post-síntesis (teniendo en cuenta el retardo de las puertas), la simulación se atascaba con algunas señales inestables.
+
+El problema principal era que se podía reenviar una cabecera por el puerto incorrecto durante unos pocos picosegundos, pues los datos se propagaban más rápido que las señales de control del \textmodule{crossbar}. Esa cabecera podía, a su vez, ser reenviada de nuevo creando una situación inestable en la que aparecía un ciclo combinacional. Estos problemas ocurrían al realizar una síntesis sin restricciones, y se podrían solucionar añadiendo \textit{constraints} a las señales, restringiendo las entradas del \textmodule{crossbar} para que la señal con los nuevos datos llegue \textbf{después} de haber realizado la conmutación de circuitos. Estas tareas, sin embargo, no son a nivel de diseño RTL, por lo que se buscaron alternativas a dicho nivel para lograr solucionar el problema. Tras múltiples semanas intentándolo, se determinó abandonar dicho diseño y cambiar las especificaciones de la red, buscando un diseño síncrono para eliminar dichos ciclos combinacionales.
+
+Finalmente, se decidió pasar a un diseño con establecimiento de caminos secuencial, pero intentando reutilizar la mayor parte posible del diseño anterior, por lo que se implementó el algoritmo de conmutación de circuitos segmentado.
+
+Puede verse el antiguo diseño con conmutación de caminos combinacional usando el sistema de control de versiones git, en el repositorio en GitHub del proyecto\footnote{\url{https://github.com/daviddavo/tfg_poc_noc}}, mostrando el estado con un \textit{commit} anterior al 3 de Mayo de 2022.
+
+\section{Problemas al conectar la ALU y la NoC}
+\label{sec:problemas_noc}
+
+La unidad aritmético-lógica (ALU) ha sido el único módulo de la unidad de ejecución que no utiliza la NoC. Esto es debido principalmente a los siguientes problemas:
+
+\begin{enumerate}
+    \item Tiene muchas responsabilidades, no solo se usa en la fase de ejecución de las instrucciones aritmético-lógicas, sino que también se utiliza en la predicción de salto o en el cálculo de direcciones de memoria en \textit{load} y \textit{store}.
+    \item Por lo mencionado en el ítem anterior, la ALU cuenta con demasiadas señales, haciendo que los paquetes tengan demasiado tamaño y tarden demasiado en llegar. 
+    Por lo tanto, sería necesario aumentar la frecuencia de reloj de la NoC para que llegasen en menos de un ciclo de reloj del sistema.
+    \item Además, la ALU no expone cuando se ha terminado de realizar un cálculo, por lo que el \textit{wrapper} no puede identificar cuando deben enviarse los resultados.
+\end{enumerate}
+
+En la sección \ref{subsec:futuro_alu_noc} se mencionan posibles soluciones a dichos problemas.

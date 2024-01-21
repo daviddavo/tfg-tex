@@ -1,0 +1,80 @@
+\section{Formato de las instrucciones}
+
+El formato de las instrucciones es el siguiente:
+
+\begin{figure}[h]
+\begin{center}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{0.3in}@{}p{0.8in}@{}p{0.6in}@{}p{0.18in}@{}p{0.7in}@{}p{0.6in}@{}p{0.6in}@{}p{0.3in}@{}p{0.5in}l}
+\\
+\multicolumn{1}{c}{\instbit{31}} &
+\instbitrange{30}{25} &
+\instbitrange{24}{21} &
+\multicolumn{1}{c}{\instbit{20}} &
+\instbitrange{19}{15} &
+\instbitrange{14}{12} &
+\instbitrange{11}{8} &
+\multicolumn{1}{c}{\instbit{7}} &
+\instbitrange{6}{0} \\
+\cline{1-9}
+\multicolumn{2}{|c|}{funct7} &
+\multicolumn{2}{c|}{rs2} &
+\multicolumn{1}{c|}{rs1} &
+\multicolumn{1}{c|}{funct3} &
+\multicolumn{2}{c|}{rd} &
+\multicolumn{1}{c|}{opcode} &
+R-type \\
+\cline{1-9}
+\\
+\cline{1-9}
+\multicolumn{4}{|c|}{imm[11:0]} &
+\multicolumn{1}{c|}{rs1} &
+\multicolumn{1}{c|}{funct3} &
+\multicolumn{2}{c|}{rd} &
+\multicolumn{1}{c|}{opcode} &
+I-type \\
+\cline{1-9}
+\\
+\cline{1-9}
+\multicolumn{2}{|c|}{imm[11:5]} &
+\multicolumn{2}{c|}{rs2} &
+\multicolumn{1}{c|}{rs1} &
+\multicolumn{1}{c|}{funct3} &
+\multicolumn{2}{c|}{imm[4:0]} &
+\multicolumn{1}{c|}{opcode} &
+S-type \\
+\cline{1-9}
+\\
+\cline{1-9}
+\multicolumn{1}{|c|}{imm[12]} &
+\multicolumn{1}{c|}{imm[10:5]} &
+\multicolumn{2}{c|}{rs2} &
+\multicolumn{1}{c|}{rs1} &
+\multicolumn{1}{c|}{funct3} &
+\multicolumn{1}{c|}{imm[4:1]} &
+\multicolumn{1}{c|}{imm[11]} &
+\multicolumn{1}{c|}{opcode} &
+B-type \\
+\cline{1-9}
+\\
+\cline{1-9}
+\multicolumn{6}{|c|}{imm[31:12]} &
+\multicolumn{2}{c|}{rd} &
+\multicolumn{1}{c|}{opcode} &
+U-type \\
+\cline{1-9}
+\\
+\cline{1-9}
+\multicolumn{1}{|c|}{imm[20]} &
+\multicolumn{2}{c|}{imm[10:1]} &
+\multicolumn{1}{c|}{imm[11]} &
+\multicolumn{2}{c|}{imm[19:12]} &
+\multicolumn{2}{c|}{rd} &
+\multicolumn{1}{c|}{opcode} &
+J-type \\
+\cline{1-9}
+\end{tabular}
+\end{center}
+\caption[Formato de instrucciones base en RISC-V 32 bits]{Formato de instrucciones base de 32 bits. Cada subcampo del inmmediato se describe con la posición de los bits (imm[{\em x}\,]) relativa al subcampo, y no a la instrucción como suele hacerse. Extraído de \cite{RiscVSpec1} }
+\label{fig:baseinstformats}
+\end{figure}

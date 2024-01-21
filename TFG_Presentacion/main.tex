@@ -1,0 +1,79 @@
+\documentclass[aspectratio=169,svgnames]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{mathspec}
+\usepackage{minted}
+\usepackage{pgfpages}
+\usepackage{tikz}
+\usepackage{datetime}
+\usepackage{xparse}
+\usepackage{epigraph}
+% \usepackage{enumitem}
+\usepackage{fontawesome}
+\usepackage{hyperref}
+\usepackage[sorting=none]{biblatex}
+\usepackage{csquotes}
+\usepackage[type={CC}, modifier={by}, version={4.0}]{doclicense}
+
+\newif\ifconcurso
+% \concursotrue
+\concursofalse
+
+\title[Trabajo de Fin de Grado]{Implementación de una red en chip en un procesador RISC-V}
+\subtitle{NoC implementation of a RISC-V processor}
+\author[David Davó Laviña]{David~Davó~Laviña\ifconcurso\else\\[1ex] {\scriptsize Óscar Garnica Alcázar \and Juan Lanchares Dávila}\fi}
+\institute[UCM]{\ifconcurso\else DACYA, \fi Facultad de Informática, Universidad Complutense de Madrid}
+% \date{\today{}}
+\date{9 de Junio de 2022}
+
+\useoutertheme{infolines}
+\usetheme[height=1.2cm]{Rochester}
+\usecolortheme{default}
+\setbeamertemplate{navigation symbols}[only frame symbol]{}
+
+\logo{\includegraphics[height=1cm]{Images/logos/3-2016-07-21-EscudoUCMTransparenteBig.png}}
+\titlegraphic{
+    \includegraphics[height=2cm]{Images/logos/3-2016-07-21-EscudoUCMTransparenteBig.png}
+    \hspace{.3cm}
+    \includegraphics[height=2cm]{Images/logos/escudofdigrande.png}
+    % \hspace{.3cm}
+    % \tikz\node[circle, minimum width=1.9cm,
+    %     path picture = {
+    %         \node at (path picture bounding box.center) {
+    %             \includegraphics[width=2cm]{Images/logos/ascii.jpg}
+    %         };
+    %     }
+    % ] {};
+}
+
+% Cosas bibliografia
+\addbibresource{references.bib}
+\setbeamertemplate{bibliography item}{\faFileTextO}
+\renewcommand*{\bibfont}{\small}
+
+\begin{document}
+
+\frame[plain]{\titlepage}
+
+\setcounter{tocdepth}{2}
+% \begin{frame}[allowframebreaks]{Índice}
+\begin{frame}{Índice}
+  \tableofcontents
+\end{frame}
+
+\input{Sections/1intro}
+\input{Sections/2objectives}
+\input{Sections/3risc-v}
+\input{Sections/4noc}
+\input{Sections/5resultados}
+\input{Sections/6conclusiones}
+
+\section{Referencias}
+\begin{frame}[allowframebreaks]{Referencias}
+    % \nocite{*}
+    % \bibliographystyle{plain}
+    % \bibliographystyle{acm}
+    \printbibliography
+\end{frame}
+
+\end{document}

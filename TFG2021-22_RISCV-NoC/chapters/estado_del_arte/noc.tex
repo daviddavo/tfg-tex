@@ -1,0 +1,33 @@
+\setchapterpreamble[u]{
+    \dictum[Jon Pertwee como El Tercer Doctor en \textit{Doctor Who}]{\textquote{A straight line may be the shortest distance between two points, but it is by no means the most interesting.}}
+}
+\chapter{Diseño de una Red en Chip}
+\label{chap:desNoC}
+
+En esta sección se tratan las distintas características a tener en cuenta en la especificación de una red y las decisiones de tomadas para la NoC implementada. Las definiciones usadas en esta sección están fuertemente basadas en \cite{HenessyPattersonF,AC5,Duato03}.
+
+Una red es un grupo de dos o más dispositivos que se enlazan entre sí para intercambiar información. Según su tamaño y el número de dispositivos interconectados, podemos clasificarlas en:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{WANs} o redes de área amplia: funcionan alrededor del mundo y conectan miles de millones de dispositivos. Suelen interconectar distintas redes más pequeñas.
+    \item \textbf{LANs} o redes de área local: se conectan computadores distribuidos a lo largo de una sala, edificio, o campus. Conectan miles de dispositivos.
+    \item \textbf{SANs} o redes de área de sistema: conectan un mismo sistema, es la red usada para conectar procesadores y memorias en un supercomputador o un centro de procesamiento datos. Conectan cientos o miles de dispositivos entre sí.
+    \item \textbf{NoCs} o redes en chip: Se conectan las unidades funcionales de una microarquitectura, dentro de un único sistema en chip. Suelen conectar pocos dispositivos, aunque puede llegar a los cientos de unidades como en el caso de las GPUs.
+\end{itemize}
+
+\begin{recuadronoc}
+    En nuestro caso, diseñaremos una red en chip con menos de una decena de dispositivos a interconectar, por lo que nuestro objetivo será tomar decisiones de diseño de bajo coste para reducir el impacto de la NoC en potencia y recursos consumidos.
+\end{recuadronoc}
+
+\subimport{noc}{topologia}
+\subimport{noc}{encaminamiento}
+\subimport{noc}{arbitraje}
+\subimport{noc}{flits}
+\subimport{noc}{resumen}
+% \subimport{noc}{protocolo}
+
+% \section{Simulación de alto nivel}
+
+% Creo que aquí no tiene sentido esta sección, pues no se ha hecho ningún modelo ``de alto nivel'' en Python o algo así. Se ha simulado directamente el comportamiento de la red codificada en SystemVerilog, pero pre-síntesis.
+
+% Tal vez las gráficas y los resultados deberían ir en el capítulo 9 y eliminar directamente esta sección.

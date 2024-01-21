@@ -1,0 +1,40 @@
+\chapter{Motivaciones}
+
+Una red en chip (NoC) es una arquitectura de comunicación entre submódulos de un circuito integrado. Es una tecnología emergente para los sistemas en chip (SoC), en la que se aprovechan los métodos de redes convencionales para crear conexiones más flexibles entre los distintos dispositivos o módulos del SoC. 
+% Además, su diseño modular puede mejorar la productividad en las fases de diseño, permitiendo reutilizar diseños para conectar módulos heterogéneos.
+Además, su diseño modular permite aumentar la productividad en las fases de diseño, reutilizando los elementos generados (topología, encaminadores, interfaces de red...) para conectar módulos heterogéneos.
+
+Gracias a su escalabilidad y eficiencia (tanto energética como de coste de desarrollo y área), su uso ha aumentado de manera notable recientemente, sobre todo para conectar los distintos \textit{núcleos} en las nuevas arquitecturas \textit{multicore} y \textit{manycore}.
+
+Por último, también se está usando para incorporar técnicas de detección y corrección de errores y mejorar la calidad de servicio, haciendo la comunicación mucho más resiliente y tolerante a fallos.
+
+Cuando una partícula ionizante impacta con un dispositivo electrónico, puede producirse un cambio de estado en sus señales o \textit{soft error}. Debido al reducido tamaño de los transistores, los circuitos integrados son cada vez más susceptibles a fallos, y su tasa de fallos aumenta cuando se expone directamente a radiación, como es en aplicaciones médicas, militares y aeroespaciales. Estos errores transitorios son detectables y corregibles recargando el estado del circuito. Sin embargo, si la partícula es altamente ionizante, puede dañar permanentemente una parte del circuito.
+
+Por otro lado, usando matrices de puertas lógicas programables~(\mbox{FPGA}), podemos realizar reconfiguraciones dinámicas parciales para cambiar en tiempo de ejecución parte del diseño. 
+Al realizar una reconfiguración, nos podemos encontrar que la conexión punto a punto entre dos módulos deje de existir, por lo que es necesario proveer de algún mecanismo de interconexión que permita introducir nuevos elementos en tiempo de ejecución.
+Por lo tanto, podemos utilizar la NoC para crear un sistema tolerante a fallos para conectar los distintos módulos del diseño. En el caso de que el sustrato sobre el que se implementa un módulo falle, utilizando la reconfiguración dinámica de la FPGA se puede reimplementar y conectar a otro puerto de entrada a la NoC. Este mecanismo también nos permitiría añadir y eliminar IPs de un sistema según se precise su uso, minimizando el área consumida por nuestro diseño.
+%  La flexibilidad de una NoC nos permite, en el caso de que parte de la FPGA se degrade permanentemente, reconfigurar otra parte de la FPGA con área libre para restaurar el módulo afectado y conectarlo en otro puerto de la NoC para que el sistema pueda seguir siendo usado. También podríamos añadir y eliminar IPs de un sistema según se precise su uso, minimizando el área consumida por nuestro diseño.
+
+Para estudiar la viabilidad de la NoC como mecanismo para aumentar la tolerancia a fallos de un sistema complejo, se va a llevar a cabo una prueba de concepto utilizando el procesador libre \mbox{SweRV-EL2} de Western Digital, de arquitectura libre RISC-V. En concreto, utilizamos la NoC como red de interconexión de los distintos módulos de la unidad de ejecución de dicho procesador.
+
+El empleo de un procesador abierto como es RISC-V encaja muy bien con la modularidad. Debido a su licencia abierta nos permite modificar implementaciones ya existentes para crear una prueba de concepto. Además, su conjunto de instrucciones, al ser también modular y abierto, nos permitiría añadir un conjunto de instrucciones de control de la NoC de ser necesario.
+
+\begin{otherlanguage}{english}
+\chaptertype{E}
+\addtocounter{chapter}{-1}
+\chapter{Motivations}
+
+A Network on Chip (NoC) is a communication architecture used between the modules of an integrated circuit (IC). It is an emergent technology for Systems on Chip (SoC), in which conventional networking methods are leveraged to create more flexible connections between the different modules of the SoC. Furthermore, Its modular design improves productivity in the design phases, reusing generated elements (topology, routers, network interfaces...) to connect heterogeneous modules. 
+
+Thanks to its scalability and efficiency (both in power, development costs and resources), its use has increased significantly recently, especially to connect the multiple cores in new many core and multicore architectures.
+
+Lastly, NoCs are also being used to include error detection and correction methods, and to implement traffic prioritization methods, making the communication more fault-tolerant.
+
+If an ionizing particle hits an electronic device, a change of state or Single Event Upset can be produced. Due to the small size of transistors, ICs are increasingly susceptible to these errors, and its fault rate increases when directly exposed to radiation, for example, in medical, aerospace or military applications. These transient errors can be detected, and corrected by reloading the state of the circuit. However, total ionizing doses can permanently damage part of the circuit.
+
+On the other hand, using field-programmable gate arrays (FPGAs), we can perform dynamic partial reconfigurations (DPR) to change part of the design at runtime. After a DPR, we can find that the point-to-point connection between two modules ceases to exist, so it is necessary to provide some interconnection mechanism that allows new elements to be introduced at runtime. Hence, we can use a NoC to create a fault-tolerant system to connect the modules of the design. In the case that the part of the FPGA in which a module is implemented fails, the module can be reimplemented on free area using DPR, connecting it to another input port of the NoC. This mechanism also allows adding and removing IPs from a system as they are needed, reducing the overall area consumed by our design.
+
+To study the feasibility of using a NoC as a method to turn a complex system fault-tolerant, a proof of concept is going to be performed using Western Digital's SweRV-EL2, which uses the free and open RISC-V architecture. Precisely, we will use the NoC as an interconnection network for the modules of the execution unit of said processor.
+
+The use of an open processor such as RISC-V fits very well with the modular design. Because of its open licence, we can modify an existing implementation to create our proof of concept. Moreover, its Instruction Set Architecture, being also modular and open, would allow us to add NoC control instructions if needed.
+\end{otherlanguage}

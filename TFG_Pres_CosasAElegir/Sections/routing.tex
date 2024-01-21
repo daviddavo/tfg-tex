@@ -1,0 +1,87 @@
+\section{Encaminamiento}
+
+\subsection{Switching}
+\begin{frame}[allowframebreaks]{Tipo de Switching}
+    \begin{itemize}
+        \item \textbf{Store-and-forward}
+        \begin{itemize}
+            \item No proporciona a penas ventajas en nuestro contexto
+            \item Hay que almacenar los paquetes enteros, por lo que necesita demasiada área
+        \end{itemize}
+        \item \textbf{Cut-through}
+        \begin{itemize}
+            \item Sigue necesitando búfers para almacenar el paquete cuando se produce una contención
+            \item Menos latencia
+            \item Degrada a store-and-forward en routing no adaptativo
+        \end{itemize}
+        \item \textbf{Wormhole}
+        \begin{itemize}
+            \item Se parten los paquetes en \textit{flits}. Se manda un flit cabecera que reserva el camino, y uno cola que lo libera. Solo hay que guardar el flit (no todo el paquete) en caso de contención.
+            \item Se puede mitigar la contención (y evitar deadlocks) con canales virtuales
+        \end{itemize}
+        \item \textbf{Conmutación de circuitos}
+        \begin{itemize}
+            \item Se establece un circuito antes de comenzar la transmisión (más latencia que wormhole)
+            \item El circuito está reservado, por lo que se aprovecha el ancho de banda al máximo en esa conexión (pero no lo pueden usar otras conexiones)
+        \end{itemize}
+    \end{itemize}
+    \begin{exampleblock}{Conclusión}
+        Usamos wormhole (o conmutación de circuitos si vemos que no funciona)
+    \end{exampleblock}
+\end{frame}
+
+\subsection{Determinista o adaptativo}
+\begin{frame}{¿Determinista o adaptativo?}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{block}{Determinista}
+                \begin{itemize}
+                    \item Fácil de implementar (Ej: DOR) % \footnote{DOR: Dimensional Order Routing})
+                    \item No hay \textbf{livelocks}
+                    \item Para solucionar el \textbf{starvation} podemos usar RR
+                    \item Pueden evitarse deadlocks con algún esquema concreto
+                \end{itemize}
+            \end{block}
+        \end{column} %
+        \begin{column}{.5\textwidth}
+            \begin{block}{Adaptativo}
+                \begin{itemize}
+                    \item Necesitamos almacenar de alguna manera el estado de la red $\rightarrow$ buffers $\rightarrow$ más área
+                    \item Necesitamos comunicar el estado de la red $\rightarrow$ gossiping protocols
+                    \item Hay que tratar los \textbf{livelocks}
+                \end{itemize}
+            \end{block}
+        \end{column}%
+    \end{columns}
+    
+    \begin{exampleblock}{Conclusión}
+        Usar un algoritmo determinista, aunque puede merecer la pena buscar un algoritmo adaptativo sencillo
+    \end{exampleblock}
+\end{frame}
+
+\subsection{Desde la fuente o desde los nodos}
+\begin{frame}{¿Encaminamiento en la fuente o en los nodos?}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{block}{En la fuente}
+                \begin{itemize}
+                    \item La interfaz de cada elemento necesita conocer la red
+                    \item (Y su estado en el caso de encaminamiento adaptativo)
+                    \item Buena idea si quieres adaptativo con rúters ligeros (pero NIC grandes)
+                \end{itemize}
+            \end{block}
+        \end{column}%
+        \begin{column}{.5\textwidth}
+            \begin{block}{En cada nodos}
+                \begin{itemize}
+                    \item Cada rúter necesita conocer la red
+                    \item (Y su estado en el caso de encaminamiento adaptativo)
+                    \item Con encaminamiento determinista puede calcularse el siguiente salto con una operación aritmética combinacional o una pequeña ROM
+                \end{itemize}    
+            \end{block}
+        \end{column}
+    \end{columns}
+    \begin{exampleblock}{Conclusión}
+        Encaminamiento en los nodos
+    \end{exampleblock}
+\end{frame}

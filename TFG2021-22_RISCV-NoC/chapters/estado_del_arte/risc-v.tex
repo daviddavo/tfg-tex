@@ -1,0 +1,53 @@
+\setchapterpreamble[u]{
+    \dictum[Leonard Nimoy como Mr. Spock en \textit{Start Trek TOS}]{\textquote{Computers make excellent and efficient servants, but I have no wish to serve under them.}}
+}
+\chapter{RISC-V}
+
+% RISC-V es una arquitectura de estándar abierto que sigue los principios de las arquitecturas RISC (\textit{Reduced Instruction Set Computers} o Computadoras de Conjunto Reducido de Instrucciones), de tipo load-store y conjunto de instrucciones variable y modular, y 32 registros de propósito general% (el registro cero está conectado a tierra)\footnote{También existe un subconjunto para procesadores embebidos de 16 registros}.
+
+% RISC-V es tan solo un ISA (Instruction Set Architecture), es decir, una definición de un conjunto de instrucciones que debe soportar cualquier procesador que quiera ejecutar software compatible con dicha arquitectura.
+RISC-V es tan solo un ISA (\textit{Instrucion Set Architecture}), es decir, la parte del procesador que debe tener en cuenta el compilador o el programador para generar software ejecutable por una máquina de esa arquitectura \cite{HenessyPattersonCAQA}. La principal diferencia con otras ISAs como MIPS, ARM o x86 es que RISC-V es una arquitectura de estándar abierto y gratuito, por lo que cualquiera puede diseñar su propio procesador que la implemente. 
+% A diferencia de AMD, Intel o ARM, \mbox{RISC-V} International no fabrica ningún tipo de procesador; en su lugar diversas compañías y organizaciones crean sus propias implementaciones \cite{RiscVExchangeCores}, con distintas características. 
+
+La arquitectura RISC-V tiene un conjunto de instrucciones \textit{reducido} o RISC (\textit{Reduced Instruction Set Computer}), por lo que cuenta con menos instrucciones que una arquitectura compleja o CISC (\textit{Complex Instruction Set Computer}). Al contrario que en CISC, las instrucciones en RISC son más simples y cada una de ellas realiza una sola función muy concreta. Asimismo, decimos que RISC-V es una arquitectura \textit{load/store}, también llamada de \textit{registro a registro}, en la que el procesador cuenta con un \textit{banco de registros} en el que se realizan las operaciones, y nunca directamente sobre la memoria. Es decir, para ejecutar un cálculo usando datos de la memoria primero es necesario usar instrucciones de \textit{load} para llevar los operandos a los registros, luego realizar el cálculo con todas las instrucciones aritmético-lógicas necesarias y, finalmente, usar un \textit{store} para desplazar el resultado de nuevo a la memoria.
+
+ La arquitectura RISC-V es modular, existiendo distintos conjuntos base, y extensiones que pueden añadir funcionalidades a un procesador. Para que un procesador soporte la arquitectura RISC-V no privilegiada debe implementar el conjunto base \textbf{I} de 32, 64 o 128 bits; aunque puede usarse el conjunto base \textbf{E} de 32 bits para sistemas embebidos, que cuenta con la mitad de registros accesibles \cite{RiscVSpec1}. Asimismo, se definen múltiples extensiones que pueden soportarse en cada implementación. A continuación se listan las extensiones no privilegiadas ratificadas en la versión 20191213 del ISA:
+
+\begin{itemize}[noitemsep]
+    \item[\textbf{M}] Multiplicación y división entera
+    \item[\textbf{A}] Instrucciones atómicas
+    \item[\textbf{F}] Coma flotante de precisión sencilla (IEEE-754)
+    \item[\textbf{D}] Coma flotante de precisión doble (IEEE-754)
+    \item[\textbf{Q}] Coma flotante de precisión cuádruple
+    \item[\textbf{C}] Instrucciones comprimidas (como el conjunto \textit{Thumb} de ARM)
+    \item[\textbf{Zicsr}] CSR: Registro de Control y Estado
+    \item[\textbf{Zifencei}] Barrera o \textit{fence} para la fase \textit{fetch} de instrucciones
+\end{itemize}
+
+También cuenta con extensiones aún no ratificadas para manipulación de bits, SIMD (\textit{Single Instruction Multiple Data}), operaciones vectoriales, criptografía, JIT (aceleración de lenguajes intepretados), virtualización... Parte del espacio de instrucciones está reservado para la implementación de conjuntos de instrucciones propietarios.
+
+% \begin{recuadro}
+Para identificar las características de la arquitectura de un procesador, suele usarse como nomenclatura el prefijo \textit{RV}, seguido del número de bits y los subconjuntos de instrucciones que soporta (comenzando con la ISA base). Por ejemplo, un procesador de propósito general de 64 bits con multiplicación y división de enteros, instrucciones atómicas y coma flotante sería un procesador RV64IMAFD; mientras que un procesador embebido con la extensión criptográfica sería un RV32EK.
+
+En ocasiones nos referiremos a la extensión \textbf{G}, que es una abreviatura de \textbf{IMAFDZicsrZifencei} y comprende todos los conjuntos necesarios para implementar un procesador de propósito general. Por lo tanto, un procesador RV32/64G es un objetivo estable para el desarrollo de software, pues todas sus extensiones están ratificadas.
+% \end{recuadro}
+
+% En caso de querer implementar un dispositivo embebido, es posible usar como conjunto base el subconjunto \textbf{E} en lugar de \textbf{I}, que solo tiene acceso a 16 de los 32 registros entre otras muchas limitaciones.
+
+% \input{chapters/estado_del_arte/risc-v/formato_instrucciones}
+
+% En el capítulo \ref{ch:desCore} de la página \pageref{ch:desCore} se exponen distintas implementaciones RV32/64 y la elegida para incluir el diseño de la NoC.
+
+La codificación de las instrucciones es fija, y podemos distinguir los siguientes seis formatos en el conjunto base~\cite{BerkeleyCS61C7}:
+
+\begin{itemize}[noitemsep]
+    \item [\textbf{R}] Instrucciones en las que se especifican 3 registros: 2 que almacenan los operandos fuente y un destino en el que guardar el resultado. Para poder realizar más operaciones, este tipo de instrucciones cuentan con bits extra para seleccionar la operación a realizar.
+    \item [\textbf{I}] Instrucciones que incluyen un operando \textit{inmediato} (fijo en la codificación de la instrucción), además de otro registro fuente y un destino.
+    \item [\textbf{S}] Instrucciones de \textit{store}, encargadas de guardar los datos de un registro a la memoria.
+    \item [\textbf{SB}] Instrucciones de ramificación \textit{branch}, que implementan saltos condicionales.
+    \item [\textbf{U}] Instrucciones en las que se especifica un registro destino y un inmediato (de 20 bits, más largo que en las de tipo I).
+    \item [\textbf{UJ}] Instrucciones de salto incondicional.
+\end{itemize}
+
+\input{chapters/estado_del_arte/risc-v/core}
+\input{chapters/estado_del_arte/risc-v/swerv}

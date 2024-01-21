@@ -1,0 +1,27 @@
+\section{Conmutación}
+
+La conmutación o \textit{switching} se encarga de conectar entre sí los enlaces de la red. En el caso ideal, un enlace está solo conmutado (y ocupado) estrictamente cuando es necesario transmitir datos, maximizando el tiempo libre de cada uno. El algoritmo de arbitraje decidirá qué conmutaciones se realizan, y el elemento de conmutación de dentro del encaminador suele ser un \textit{crossbar} o una pequeña \textit{MIN}.
+
+Podemos distinguir tres técnicas principales de conmutación:
+\begin{itemize}
+    \item \textbf{Conmutación de circuitos}: Se reserva un camino físico antes de comenzar a enviar datos. Los enlaces usados quedarán bloqueados y no pueden ser usados por ningún otro paquete, por lo que la transmisión puede ser ininterrumpida y aprovechará al máximo el ancho de banda permitido por los enlaces. Para establecer un camino se mandan datos con la información necesaria para que el algoritmo de encaminamiento reconstruya el camino a reservar. Cuando estos datos llegan a su destino, se envía de vuelta un mensaje de confirmación, para que pueda comenzar la transmisión de los datos. Al terminar la transmisión, se pueden liberar los recursos.
+    \item \textbf{Conmutación de paquetes}: Podemos dividir la información en paquetes de tal manera que todos ellos tengan la información del destino en una pequeña cabecera. Cada paquete es almacenado en el encaminador, que consulta la cabecera antes de reenviarlo por el puerto seleccionado. Esta técnica también es conocida como \textit{Store-and-Forward} (SAF). Si el encaminamiento es adaptativo, los paquetes pueden llegar desordenados, por lo que será necesario introducir en la cabecera también un número de secuencia para poder recomponer el mensaje completo.
+    \item \textbf{Virtual Cut Through} (VCT): En SAF almacenamos el paquete completo antes de realizar la decisión de enrutado. Sin embargo, una vez hemos recibido la información del destino ya podríamos tomar la decisión de encaminamiento y comenzar a reenviar la información, disminuyendo considerablemente la latencia cuando no se producen bloqueos. Sin embargo, sigue siendo necesario tener búfers que almacenen el paquete si se produce un bloqueo.
+    \item \textbf{Wormhole}: Se hace algo parecido a VCT, sin embargo, para evitar almacenar todo el paquete cuando ocurran problemas, se dividen los paquetes en \textit{flits}\footnote{La palabra \textit{flit} es un acrónimo de \textit{flow control unit} o unidad de control de flujo.}: unidades indivisibles que son almacenadas. De este modo, no es necesario almacenar todo el paquete, por lo que se reduce el tamaño de los búfers de cada encaminador. Al estar cada paquete ``segmentado'', puede ocurrir que en un instante el paquete esté almacenado en varios switches distintos.
+\end{itemize}
+
+\begin{recuadronoc}
+La NoC implementada hace uso de una técnica basada en las ideas de conmutación de circuitos y wormhole, en la que se dividen los paquetes en \textit{flits} y el primero de ellos (llamado cabecera) se encarga de enviar los datos para realizar la conmutación de circuitos \cite{SafeiPCS, YalamanchiliPCS}.
+\end{recuadronoc}
+
+\subsection{Arbitraje}
+
+El arbitraje es la política por el que se decide qué paquete tendrá acceso a qué recursos (los enlaces disponibles) en caso de conflictos. Para evitar la inanición cuando dos o más paquetes pidan un mismo recurso, el algoritmo de arbitraje deberá ser \textit{justo}, por ejemplo arbitrando por orden de llegada, o con \textit{round-robin}.
+% \tdinquiry{¿Debería seguir usando el término \textit{round-robin}? ¿O mejor \textit{castellanizarlo} a ``por turnos''?}
+% Resuelto -> round-robin mejor
+
+Puede implementarse algún sistema de prioridad si en la cabecera se incluye información adicional, haciendo que los mensajes más importantes pasen primero.
+
+\begin{recuadronoc}
+    En nuestra NoC, el arbitraje usa \textit{round-robin}.
+\end{recuadronoc}

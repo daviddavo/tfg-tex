@@ -1,0 +1,28 @@
+\section{Características de la red}
+
+\subsection{Topología}
+\begin{frame}{Topología}
+    \begin{itemize}
+        \item Toro 2D y cada nodo tiene 5 enlaces: NSEO+\textit{local}
+        \item Malla/Toro 2D y los nodos tienen 4 enlaces
+        \begin{itemize}
+            \item En malla, los de los márgenes conectan con dispositivos
+            \item En toro, algunos conectan con dispositivos y tres direcciones, y otros con NSEO (sin disp)
+        \end{itemize}
+    \end{itemize}
+    \begin{exampleblock}{Conclusión}
+        TBD
+    \end{exampleblock}
+\end{frame}
+
+\subsection{Dentro de los nodos}
+\begin{frame}{Contención en los nodos}
+    \begin{itemize}
+        \item \textbf{No bloqueante} $\rightarrow$ crossbar 4x4 o 5x5
+        \item \textbf{Bloqueante} $\rightarrow$ red MIN u otra cosa (menos transistores)
+    \end{itemize}
+    
+    \begin{alertblock}{¿Y el arbitraje?}
+        Si dos o más entradas distintas quieren ir a la misma salida, podemos usar round robin.
+    \end{alertblock}
+\end{frame}

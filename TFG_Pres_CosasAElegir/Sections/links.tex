@@ -1,0 +1,41 @@
+\section{Enlaces}
+
+\subsection{Sentido de transmisión}
+\begin{frame}{Sentido de transmisión}
+    \begin{columns}
+        \begin{column}{.5\textwidth}
+            \begin{alertblock}{Half-duplex}
+                \begin{itemize}
+                    \item \textbf{Ventaja}: Usamos la mitad de cable
+                    \item Necesario crear algún tipo de arbitraje (más área gastada)
+                    \item Pueden producirse colisiones
+                    \item Mayor latencia y menor throughput en general
+                    \item El objetivo de usar una NoC es quitarnos el medio compartido
+                \end{itemize}
+            \end{alertblock}
+        \end{column} %
+        \begin{column}{.5\textwidth}
+            \begin{block}{Full-duplex}
+                \begin{itemize}
+                    \item En el silicio, los cables son lo más barato y fácil de implementar
+                    \item Al no ser necesario arbitraje, nos ahorramos área (y tiempo diseñando)
+                \end{itemize}
+            \end{block}
+        \end{column} %
+    \end{columns}
+    
+    \begin{exampleblock}{Conclusión}
+        Usaremos full-duplex
+    \end{exampleblock}
+\end{frame}
+
+\subsection{Segmentación}
+\begin{frame}{Segmentación}
+    \begin{itemize}
+        \item Podríamos segmentar los enlaces para aumentar el throughput reduciendo el tiempo de ciclo
+    \end{itemize}
+
+    \begin{exampleblock}{Conclusión}
+        Dependiendo del ciclo de reloj objetivo y la latencia de los enlaces implementados, se segmentarán o no los enlaces.
+    \end{exampleblock}
+\end{frame}

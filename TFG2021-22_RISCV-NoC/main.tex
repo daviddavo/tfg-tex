@@ -1,0 +1,124 @@
+\documentclass[titlepage]{tfg-ucm}
+\usepackage[english,spanish,es-tabla]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{lipsum}
+\usepackage{geometry} %% Remove showframe in your document
+\usepackage{biblatex}
+\usepackage{import}
+\usepackage{minted}
+\usepackage{xargs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{subcaption}
+% \usepackage[spanish,colorinlistoftodos,prependcaption,textsize=footnotesize]{todonotes}
+\usepackage{enumitem}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+\usepackage{csquotes}
+
+\title{Implementación de una red en chip en un procesador RISC-V}
+\author{David Davó Laviña}
+\englishTitle{NoC implementation of a RISC-V processor}
+\director{Óscar Garnica Alcázar}
+\codirector{Juan Lanchares Dávila}
+\cursoAcademico{2021-2022}
+\facultad{Facultad de Informática}
+\departamento{Departamento de Arquitectura de Computadores y Automática}
+\universidad{Universidad Complutense de Madrid}
+\asignatura{Trabajo de Fin de Grado del Grado en Ingeniería Informática}
+\universityLogo{./images/logos/EscudoUCMTransparenteBig.png}
+\date{\today}
+
+\DeclareBibliographyCategory{cited}
+\AtEveryCitekey{\addtocategory{cited}{\thefield{entrykey}}}
+
+%% HYPHENATION EXCEPTIONS (tell LaTeX how to)
+% \uchyph=0 % Don't hyphenate acronyms (creates a lot of overfulls)
+
+% https://tex.stackexchange.com/questions/65355/flushbottom-vs-raggedbottom
+% This eliminated the undeful thing
+\raggedbottom
+
+% Fixes the problem when having repeated chapter numbers
+% From https://tex.stackexchange.com/questions/146254/how-to-repeat-chapter-numbers
+% We have to use \chaptertype{E} inside the otherlanguage environment so when we use \chapter
+% the href will be created as E# instead of just # (already used by the spanish version).
+\newcommand{\chaptype}{}
+\newcommand{\chaptertype}[1]{\renewcommand{\chaptype}{#1}}
+\renewcommand{\theHchapter}{\chaptype\arabic{chapter}}
+
+\addbibresource{bibliografia.bib}
+
+%% TODO & ANNOTATION COMMANDS
+% We use newcommandx to be able to pass xkeyvals to the todo command
+\newcommandx{\tdinquiry}[2][1=]{\todo[linecolor=ProcessBlue,backgroundcolor=ProcessBlue!25,bordercolor=ProcessBlue,#1]{#2}}
+\newcommandx{\tdcorrect}[2][1=]{\todo[linecolor=Red,backgroundcolor=Red!25,bordercolor=Red,#1]{#2}}
+%% --------------------------
+
+%% FROM RISC-V ISA MANUAL
+\newcommand{\instbit}[1]{\mbox{\scriptsize #1}}
+\newcommand{\instbitrange}[2]{~\instbit{#1} \hfill \instbit{#2}~}
+%% ---------------------
+
+\begin{document}
+
+% Como estas páginas no cuentan, usamos números Romanos en lugar de Arábigos
+\frontmatter
+\makecover
+
+% \makefirstpage
+% \import{chapters}{autorizacion}
+
+\import{chapters}{agradecimientos}
+
+\import{chapters}{resumen}
+\import{chapters}{abstract}
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+% \cleardoublepage
+% {
+%     \let\cleardoublepage\relax
+    \listoffigures
+    A menos que se especifique lo contrario, las figuras de este documento son de autoría propia y siguen la licencia de este documento.
+    \listoftables
+% }
+
+\mainmatter
+\part{Introducción}
+\import{chapters/introduccion}{motivaciones}
+\import{chapters/introduccion}{objetivos}
+
+\part{Estado del arte}
+\import{chapters/estado_del_arte}{risc-v}
+\import{chapters/estado_del_arte}{noc}
+
+\part{Diseño e implementación}
+% \include{chapters/diseño/core}
+\import{chapters/diseño}{tecnologias_metodologias}
+\import{chapters/diseño}{rtl}
+\import{chapters/diseño}{problemas}
+
+\part{Conclusiones y resultados}
+\import{chapters/conclusiones}{noc}
+\import{chapters/conclusiones}{swerv}
+\import{chapters/conclusiones}{trabajo_futuro}
+\import{chapters/conclusiones}{conclusiones}
+
+% \todo[disable]{Eliminar la lista de TODOs}
+% \listoftodos
+
+\nocite{Kamali2015TowardsArchitectures}
+\nocite{DeMicheli2006NetworksTools}
+\nocite{Jantsch2003NetworksChip}
+\nocite{Asanovic2014InstructionRISC-V}
+\nocite{Chen2016RISC-VGeneology}
+\printbibliography
+
+% \nocite{*}
+% \printbibliography[notcategory=cited]
+
+% \part{Anexos}
+
+\end{document}

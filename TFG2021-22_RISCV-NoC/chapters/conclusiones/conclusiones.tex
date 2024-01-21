@@ -1,0 +1,42 @@
+\chapter{Conclusiones}
+
+En el proyecto se ha creado una NoC funcional y se ha integrado en un procesador \mbox{RISC-V} \mbox{SweRV-EL2} para comunicar los módulos de la unidad de ejecución. En la realización del trabajo se han cumplido los siguientes objetivos:
+
+\begin{enumerate}[noitemsep]
+    \item He llevado a cabo un estudio en profundidad sobre las redes de interconexión en procesadores y sus distintas características.
+    \item He aprendido a (i) describir diseño hardware en SystemVerilog y realizar \textit{testbenches} automatizados, (ii) sintetizar en Xilinx Vivado y (iii) simular y depurar usando \mbox{QuestaSim}. Además del manejo del lenguaje de scripting TCL, usado por dichas herramientas.
+    \item He creado el diseño RTL sintetizable de una NoC, comprobando su funcionamiento siguiendo la metodología \textit{constrained random tests}.
+    \item Me he familiarizado con la arquitectura RISC-V y, en concreto, con el diseño RTL y las herramientas del procesador SweRV-EL2.
+    \item He aprendido el manejo del conjunto de herramientas incluidas en la distribución para la configuración, enlazado, compilación y simulación de tests de alto nivel con el procesador SweRV-EL2.
+    \item He modificado el RTL del procesador SweRV-EL2 para incluir en su unidad de ejecución la NoC desarrollada en el proyecto ---usada por el multiplicador y el divisor---, logrando pasar las distintas pruebas incluidas con el diseño.
+    \item He sintetizado el diseño y obtenido una estimación de los recursos hardware necesarios para su implementación sobre una FPGA Xilinx Virtex-7 XC7VX485T-2FFG1761C, analizando el impacto de la NoC.
+\end{enumerate}
+
+% En conclusión, se ha conseguido modificar un procesador de arquitectura RISC-V añadiendo a su unidad de ejecución una NoC sintetizable, verificando su correcto funcionamiento.
+En conclusión, el nuevo diseño del SweRV-EL2 incluye una NoC en su unidad de ejecución, con un sobrecoste en recursos hardware del 9\% en LUTs y 4\% en FFs con respecto al diseño original. 
+No obstante, la adición de la NoC permite usar técnicas de reconfiguración dinámica parcial cuando se detecten daños permanentes sobre parte del circuito, aplicando técnicas de tolerancia a fallos que hacen posible usar este diseño en entornos especialmente agresivos con los dispositivos electrónicos.
+
+\begin{otherlanguage}{english}
+\addtocounter{chapter}{-1}
+\chaptertype{E}
+\chapter{Conclusions}
+In this project, I have created a working NoC and integrated it in the \mbox{RISC-V} \mbox{SweRV-EL2} processor to connect the submodules of its execution unit. 
+% no me gusta "carry out"
+% While carrying out this project, the following objectives have been achieved:
+The following objectives have been fulfilled:
+
+\begin{enumerate}[noitemsep]
+    \item I have studied interconnection networks and their characteristics in-depth.
+    % SI EL PLURAL DE BENCH ES BENCHES, EL PLURAL DE TESTBENCH ES TESTBENCHES
+    \item I have learnt (i) to design hardware using SystemVerilog and automatized testbenches, (ii) to synthesize with Xilinx Vivado, and (iii) to simulate and debug using \textit{QuestaSim}. I also have acquired the handling of the TCL scripting language used by these tools.
+    \item I have created a synthesizable design of an NoC and checked its behaviour using the constrained random tests methodology.
+    \item I have become familiar with the RISC-V architecture and, in particular, with the RTL design and tools of the SweRV-EL2 processor.
+    \item I have learnt to utilize the toolset included in the repository to configure, link, compile, and run software tests on the SweRV-EL2 processor. 
+    \item I have modified the RTL design of the SweRV-EL2 to include an NoC inside its execution unit ---used by its multiplier and divisor---, succeeding in passing the various tests included with the design.
+    \item I have synthetized the design and obtained an estimation of the hardware resources needed to implement it on a Xilinx Virtex-7 FPGA (XC7VX485T-2FFG1761C), analysing the impact of the NoC.
+\end{enumerate}
+
+% In conclusion, a RISC-V architecture processor has been modified by adding a NoC to its execution unit, verifying its correct operation and that it remains being synthesizable.
+In conclusion, the new SweRV-EL2 design includes an NoC within its execution unit, with an additional cost in hardware resources of 9\% in LUTs and 4\% in FFs compared to the original design.
+Nevertheless, adding the NoC allows using dynamic partial reconfiguration methods to recover processor functionality when permanent damage in the FPGA is detected, improving the design fault-tolerant capabilities and allowing its use in especially harsh environments for electronic devices.
+\end{otherlanguage}

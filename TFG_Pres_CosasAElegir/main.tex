@@ -1,0 +1,78 @@
+\documentclass[aspectratio=169,svgnames,handout]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{mathspec}
+\usepackage{minted}
+\usepackage{pgfpages}
+\usepackage{tikz}
+\usepackage{datetime}
+\usepackage{xparse}
+\usepackage{epigraph}
+\usepackage{enumitem}
+\usepackage{fontawesome}
+\usepackage{hyperref}
+\usepackage[sorting=none]{biblatex}
+\usepackage{csquotes}
+\usepackage[type={CC}, modifier={by}, version={4.0}]{doclicense}
+
+\title{Cosas a Considerar en NoCs}
+\author{David Davó Laviña}
+\date{\today{}}
+
+\usetheme{Rochester}
+\usecolortheme{default}
+
+\logo{\includegraphics[height=1cm]{Images/logos/3-2016-07-21-EscudoUCMTransparenteBig.png}}
+\titlegraphic{
+    \includegraphics[height=2cm]{Images/logos/3-2016-07-21-EscudoUCMTransparenteBig.png}
+    \hspace{.3cm}
+    \includegraphics[height=2cm]{Images/logos/escudofdigrande.png}
+    % \hspace{.3cm}
+    % \tikz\node[circle, minimum width=1.9cm,
+    %     path picture = {
+    %         \node at (path picture bounding box.center) {
+    %             \includegraphics[width=2cm]{Images/logos/ascii.jpg}
+    %         };
+    %     }
+    % ] {};
+}
+
+% Cosas bibliografia
+\addbibresource{references.bib}
+\setbeamertemplate{bibliography item}{\faFileTextO}
+\renewcommand*{\bibfont}{\small}
+
+\begin{document}
+
+\frame[plain]{\titlepage}
+
+\begin{frame}{Objetivos de nuestra NoC}
+    El objetivo es conectar distintas unidades funcionales dentro de un procesador, por lo que:
+   \begin{itemize}
+       \item Cuanto menos área ocupen los encaminadores, mejor
+       \item Cuanto menos energía consuman los encaminadores, mejor
+       \item Intentar minimizar la latencia (TODO: Buscar la latencia de la conexión actual del Swerv)
+       \item Intentar mantener el ancho de banda (TODO: Buscar el ancho de banda efectivo necesario en el actual Swerv)
+       \item ¿Necesitamos corrección/detección de errores?
+   \end{itemize} 
+\end{frame}
+
+\setcounter{tocdepth}{2}
+\begin{frame}[allowframebreaks]{Índice}
+  \tableofcontents
+\end{frame}
+
+\input{Sections/links}
+\input{Sections/addressing}
+\input{Sections/routing}
+\input{Sections/network}
+
+\section*{Referencias}
+\begin{frame}[allowframebreaks]{Referencias}
+    \nocite{*}
+    % \bibliographystyle{plain}
+    % \bibliographystyle{acm}
+    \printbibliography
+\end{frame}
+
+\end{document}
